@@ -3,8 +3,8 @@ import math
 from typing import Callable, Optional
 
 from PySide6.QtCore import QTimer
-from PySide6.QtWidgets import QMainWindow, QWidget, QPushButton, QFileDialog, QLabel
-from PySide6.QtGui import QIcon, QMouseEvent, QCloseEvent
+from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsScene, QGraphicsView, QGraphicsLineItem
+from PySide6.QtGui import QIcon, QMouseEvent, QCloseEvent, QPen, QColor
 
 from ui.main_window.main_window import Ui_main_window_sound_pad
 from utils.log import Logger
@@ -15,6 +15,8 @@ from utils.config import UserConfig
 MOVE_SPEED_ATTACK_TIME = 0.1
 MOVE_SPEED_RELEASE_TIME = 0.1
 MOUSE_CHECK_FPS = 50
+PEN_COLOR = QColor(255, 255, 255)
+PEN_THICKNESS = 2
 
 
 class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
@@ -46,10 +48,13 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.pressure_sensitive: float = 1.0
         self.pressure_sensitive_range: tuple[float, float] = (0.125, 8.0)
 
-        # mouse check timer
-        self.mouse_check_timer = QTimer(self)
-        self.mouse_check_timer.timeout.connect(self.on_check_mouse_pos)
-        self.mouse_check_timer.start(1000 // MOUSE_CHECK_FPS)
+        # pos check
+        self.pos_cache: tuple[int, int] = (0, 0)
+        self.last_pos_cache: tuple[int, int] | None = None
+        self.tablet_mode: bool = False          # tablet or mouse mode
+        self.pos_update_timer = QTimer(self)
+        self.pos_update_timer.timeout.connect(self.on_update_pos)
+        self.pos_update_timer.start(1000 // MOUSE_CHECK_FPS)
 
         # midi signal uis
         self.midi_combo_box_cfg_binds = {
@@ -88,6 +93,8 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.init_status_bar()
 
         # set control panel
+        self.pen = QPen(PEN_COLOR, PEN_THICKNESS)
+        self.graphics_scene = QGraphicsScene(self)
         self.init_control_panel()
 
         # midi connection
@@ -245,29 +252,49 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
     # region control panel
 
     def init_control_panel(self):
-        self.frame_control_panel.setStyleSheet("background-color: black;")
-        self.frame_control_panel.mousePressEvent = self.on_panel_mouse_down
-        self.frame_control_panel.mouseReleaseEvent = self.on_panel_mouse_up
+        self.graphics_view.setScene(self.graphics_scene)
+        self.graphics_view.resizeEvent = self.on_panel_resize
+        self.graphics_view.mousePressEvent = self.on_panel_mouse_down
+        self.graphics_view.mouseReleaseEvent = self.on_panel_mouse_up
+
+    def on_panel_resize(self, event):
+        self.graphics_scene.setSceneRect(0, 0, self.graphics_view.width(), self.graphics_view.height())
 
     def on_panel_mouse_down(self, event: QMouseEvent):
+        self.clear_graphics()
         self.is_mouse_down = True
+        self.tablet_mode = False
         self.midi_conn.send_midi_msg(
             self.combo_box_midi_cc_press.currentData(),
             self.combo_box_chn_press.currentData(),
             self.combo_box_value_press.currentData())
 
     def on_panel_mouse_up(self, event: QMouseEvent):
+        if self.tablet_mode:
+            return
+
         self.is_mouse_down = False
         self.midi_conn.send_midi_msg(
             self.combo_box_midi_cc_release.currentData(),
             self.combo_box_chn_release.currentData(),
             self.combo_box_value_release.currentData())
 
-    def on_check_mouse_pos(self):
+    def draw_line(self, x1: float, y1: float, x2: float, y2: float):
+        self.graphics_scene.addLine(x1, y1, x2, y2, self.pen)
+
+    def clear_graphics(self):
+        self.graphics_scene.clear()
+
+    def on_update_pos(self):
+        if self.tablet_mode:
+            pass
+        else:
+            cursor = self.graphics_view.mapFromGlobal(self.cursor().pos())
+            self.pos_cache = (cursor.x(), cursor.y())
+            self.x_axis_ratio = self.pos_cache[0] / self.graphics_view.width()
+            self.y_axis_ratio = self.pos_cache[1] / self.graphics_view.height()
+
         # xy position
-        cursor = self.frame_control_panel.mapFromGlobal(self.cursor().pos())
-        self.x_axis_ratio = cursor.x() / self.frame_control_panel.width()
-        self.y_axis_ratio = cursor.y() / self.frame_control_panel.height()
         x_midi_value = self.x_axis_midi_value
         y_midi_value = self.y_axis_midi_value
         self.update_status_bar_axis(x_midi_value, y_midi_value)
@@ -275,7 +302,7 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         # mouse move speed
         x_delta = self.x_axis_ratio - self.move_speed_last_x
         y_delta = self.y_axis_ratio - self.move_speed_last_y
-        time_delta = self.mouse_check_timer.interval() / 1000.0
+        time_delta = self.pos_update_timer.interval() / 1000.0
         self.move_speed = min(
             (x_delta * x_delta + y_delta * y_delta) / (time_delta * time_delta) / self.move_speed_base_value, 1.0)
         smooth_time = MOVE_SPEED_ATTACK_TIME if self.move_speed > self.smooth_move_speed else MOVE_SPEED_RELEASE_TIME
@@ -286,19 +313,29 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.move_speed_last_y = self.y_axis_ratio
         self.update_status_bar_speed(move_speed_midi_value)
 
-        if self.is_mouse_down:
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_x_axis.currentData(),
-                self.combo_box_chn_x_axis.currentData(),
-                x_midi_value)
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_y_axis.currentData(),
-                self.combo_box_chn_y_axis.currentData(),
-                y_midi_value)
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_speed.currentData(),
-                self.combo_box_chn_speed.currentData(),
-                move_speed_midi_value)
+        if self.tablet_mode:
+            pass
+        else:
+            if self.is_mouse_down:
+                if self.last_pos_cache is not None:
+                    self.draw_line(
+                        self.last_pos_cache[0], self.last_pos_cache[1],
+                        self.pos_cache[0], self.pos_cache[1])
+                self.last_pos_cache = self.pos_cache
+                self.midi_conn.send_midi_msg(
+                    self.combo_box_midi_cc_x_axis.currentData(),
+                    self.combo_box_chn_x_axis.currentData(),
+                    x_midi_value)
+                self.midi_conn.send_midi_msg(
+                    self.combo_box_midi_cc_y_axis.currentData(),
+                    self.combo_box_chn_y_axis.currentData(),
+                    y_midi_value)
+                self.midi_conn.send_midi_msg(
+                    self.combo_box_midi_cc_speed.currentData(),
+                    self.combo_box_chn_speed.currentData(),
+                    move_speed_midi_value)
+            else:
+                self.last_pos_cache = None
 
     # endregion
 

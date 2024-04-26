@@ -15,7 +15,7 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGroupBox,
+from PySide6.QtWidgets import (QApplication, QComboBox, QGraphicsView, QGroupBox,
     QHBoxLayout, QLabel, QMainWindow, QPushButton,
     QSizePolicy, QSlider, QSpacerItem, QStatusBar,
     QVBoxLayout, QWidget)
@@ -29,44 +29,38 @@ class Ui_main_window_sound_pad(object):
         self.centralwidget.setObjectName(u"centralwidget")
         self.verticalLayout = QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName(u"verticalLayout")
-        self.frame_control_panel = QFrame(self.centralwidget)
-        self.frame_control_panel.setObjectName(u"frame_control_panel")
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.frame_control_panel.sizePolicy().hasHeightForWidth())
-        self.frame_control_panel.setSizePolicy(sizePolicy)
-        self.frame_control_panel.setMouseTracking(True)
-        self.frame_control_panel.setFocusPolicy(Qt.NoFocus)
-        self.frame_control_panel.setFrameShape(QFrame.StyledPanel)
-        self.frame_control_panel.setFrameShadow(QFrame.Raised)
+        self.graphics_view = QGraphicsView(self.centralwidget)
+        self.graphics_view.setObjectName(u"graphics_view")
+        brush = QBrush(QColor(255, 255, 255, 255))
+        brush.setStyle(Qt.NoBrush)
+        self.graphics_view.setForegroundBrush(brush)
 
-        self.verticalLayout.addWidget(self.frame_control_panel)
+        self.verticalLayout.addWidget(self.graphics_view)
 
-        self.horizontalLayout = QHBoxLayout()
-        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.verticalLayout_6 = QVBoxLayout()
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.verticalLayout_7 = QVBoxLayout()
         self.verticalLayout_7.setObjectName(u"verticalLayout_7")
         self.horizontalLayout_11 = QHBoxLayout()
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
         self.groupBox = QGroupBox(self.centralwidget)
         self.groupBox.setObjectName(u"groupBox")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
-        self.groupBox.setSizePolicy(sizePolicy1)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.groupBox.sizePolicy().hasHeightForWidth())
+        self.groupBox.setSizePolicy(sizePolicy)
         self.verticalLayout_2 = QVBoxLayout(self.groupBox)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
         self.label = QLabel(self.groupBox)
         self.label.setObjectName(u"label")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
-        self.label.setSizePolicy(sizePolicy2)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_6.addWidget(self.label)
 
@@ -81,11 +75,11 @@ class Ui_main_window_sound_pad(object):
 
         self.label_13 = QLabel(self.groupBox)
         self.label_13.setObjectName(u"label_13")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
-        self.label_13.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.label_13.sizePolicy().hasHeightForWidth())
+        self.label_13.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_6.addWidget(self.label_13)
 
@@ -101,11 +95,11 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.label_2 = QLabel(self.groupBox)
         self.label_2.setObjectName(u"label_2")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_2.addWidget(self.label_2)
 
@@ -133,16 +127,16 @@ class Ui_main_window_sound_pad(object):
 
         self.groupBox_2 = QGroupBox(self.centralwidget)
         self.groupBox_2.setObjectName(u"groupBox_2")
-        sizePolicy1.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
-        self.groupBox_2.setSizePolicy(sizePolicy1)
+        sizePolicy.setHeightForWidth(self.groupBox_2.sizePolicy().hasHeightForWidth())
+        self.groupBox_2.setSizePolicy(sizePolicy)
         self.verticalLayout_3 = QVBoxLayout(self.groupBox_2)
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.horizontalLayout_7 = QHBoxLayout()
         self.horizontalLayout_7.setObjectName(u"horizontalLayout_7")
         self.label_3 = QLabel(self.groupBox_2)
         self.label_3.setObjectName(u"label_3")
-        sizePolicy2.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
-        self.label_3.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_7.addWidget(self.label_3)
 
@@ -157,8 +151,8 @@ class Ui_main_window_sound_pad(object):
 
         self.label_14 = QLabel(self.groupBox_2)
         self.label_14.setObjectName(u"label_14")
-        sizePolicy3.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
-        self.label_14.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.label_14.sizePolicy().hasHeightForWidth())
+        self.label_14.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_7.addWidget(self.label_14)
 
@@ -174,8 +168,8 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.label_4 = QLabel(self.groupBox_2)
         self.label_4.setObjectName(u"label_4")
-        sizePolicy4.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
-        self.label_4.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_3.addWidget(self.label_4)
 
@@ -203,16 +197,16 @@ class Ui_main_window_sound_pad(object):
 
         self.groupBox_3 = QGroupBox(self.centralwidget)
         self.groupBox_3.setObjectName(u"groupBox_3")
-        sizePolicy1.setHeightForWidth(self.groupBox_3.sizePolicy().hasHeightForWidth())
-        self.groupBox_3.setSizePolicy(sizePolicy1)
+        sizePolicy.setHeightForWidth(self.groupBox_3.sizePolicy().hasHeightForWidth())
+        self.groupBox_3.setSizePolicy(sizePolicy)
         self.verticalLayout_4 = QVBoxLayout(self.groupBox_3)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.horizontalLayout_8 = QHBoxLayout()
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
         self.label_5 = QLabel(self.groupBox_3)
         self.label_5.setObjectName(u"label_5")
-        sizePolicy2.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
-        self.label_5.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_5.sizePolicy().hasHeightForWidth())
+        self.label_5.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_8.addWidget(self.label_5)
 
@@ -227,8 +221,8 @@ class Ui_main_window_sound_pad(object):
 
         self.label_15 = QLabel(self.groupBox_3)
         self.label_15.setObjectName(u"label_15")
-        sizePolicy3.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
-        self.label_15.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.label_15.sizePolicy().hasHeightForWidth())
+        self.label_15.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_8.addWidget(self.label_15)
 
@@ -244,8 +238,8 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.label_6 = QLabel(self.groupBox_3)
         self.label_6.setObjectName(u"label_6")
-        sizePolicy4.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
-        self.label_6.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_4.addWidget(self.label_6)
 
@@ -273,16 +267,16 @@ class Ui_main_window_sound_pad(object):
 
         self.groupBox_4 = QGroupBox(self.centralwidget)
         self.groupBox_4.setObjectName(u"groupBox_4")
-        sizePolicy1.setHeightForWidth(self.groupBox_4.sizePolicy().hasHeightForWidth())
-        self.groupBox_4.setSizePolicy(sizePolicy1)
+        sizePolicy.setHeightForWidth(self.groupBox_4.sizePolicy().hasHeightForWidth())
+        self.groupBox_4.setSizePolicy(sizePolicy)
         self.verticalLayout_5 = QVBoxLayout(self.groupBox_4)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.horizontalLayout_9 = QHBoxLayout()
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
         self.label_7 = QLabel(self.groupBox_4)
         self.label_7.setObjectName(u"label_7")
-        sizePolicy2.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
-        self.label_7.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
+        self.label_7.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_9.addWidget(self.label_7)
 
@@ -297,8 +291,8 @@ class Ui_main_window_sound_pad(object):
 
         self.label_16 = QLabel(self.groupBox_4)
         self.label_16.setObjectName(u"label_16")
-        sizePolicy3.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
-        self.label_16.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.label_16.sizePolicy().hasHeightForWidth())
+        self.label_16.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_9.addWidget(self.label_16)
 
@@ -314,8 +308,8 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
         self.label_8 = QLabel(self.groupBox_4)
         self.label_8.setObjectName(u"label_8")
-        sizePolicy4.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
-        self.label_8.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.label_8.sizePolicy().hasHeightForWidth())
+        self.label_8.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_5.addWidget(self.label_8)
 
@@ -352,15 +346,15 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.label_18 = QLabel(self.groupBox_7)
         self.label_18.setObjectName(u"label_18")
-        sizePolicy2.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
-        self.label_18.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
+        self.label_18.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_15.addWidget(self.label_18)
 
         self.combo_box_midi_cc_press = QComboBox(self.groupBox_7)
         self.combo_box_midi_cc_press.setObjectName(u"combo_box_midi_cc_press")
-        sizePolicy4.setHeightForWidth(self.combo_box_midi_cc_press.sizePolicy().hasHeightForWidth())
-        self.combo_box_midi_cc_press.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_midi_cc_press.sizePolicy().hasHeightForWidth())
+        self.combo_box_midi_cc_press.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_15.addWidget(self.combo_box_midi_cc_press)
 
@@ -370,15 +364,15 @@ class Ui_main_window_sound_pad(object):
 
         self.label_22 = QLabel(self.groupBox_7)
         self.label_22.setObjectName(u"label_22")
-        sizePolicy2.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
-        self.label_22.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
+        self.label_22.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_15.addWidget(self.label_22)
 
         self.combo_box_value_press = QComboBox(self.groupBox_7)
         self.combo_box_value_press.setObjectName(u"combo_box_value_press")
-        sizePolicy4.setHeightForWidth(self.combo_box_value_press.sizePolicy().hasHeightForWidth())
-        self.combo_box_value_press.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_value_press.sizePolicy().hasHeightForWidth())
+        self.combo_box_value_press.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_15.addWidget(self.combo_box_value_press)
 
@@ -388,15 +382,15 @@ class Ui_main_window_sound_pad(object):
 
         self.label_19 = QLabel(self.groupBox_7)
         self.label_19.setObjectName(u"label_19")
-        sizePolicy2.setHeightForWidth(self.label_19.sizePolicy().hasHeightForWidth())
-        self.label_19.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_19.sizePolicy().hasHeightForWidth())
+        self.label_19.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_15.addWidget(self.label_19)
 
         self.combo_box_chn_press = QComboBox(self.groupBox_7)
         self.combo_box_chn_press.setObjectName(u"combo_box_chn_press")
-        sizePolicy4.setHeightForWidth(self.combo_box_chn_press.sizePolicy().hasHeightForWidth())
-        self.combo_box_chn_press.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_chn_press.sizePolicy().hasHeightForWidth())
+        self.combo_box_chn_press.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_15.addWidget(self.combo_box_chn_press)
 
@@ -409,15 +403,15 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.label_20 = QLabel(self.groupBox_6)
         self.label_20.setObjectName(u"label_20")
-        sizePolicy2.setHeightForWidth(self.label_20.sizePolicy().hasHeightForWidth())
-        self.label_20.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_20.sizePolicy().hasHeightForWidth())
+        self.label_20.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_12.addWidget(self.label_20)
 
         self.combo_box_midi_cc_release = QComboBox(self.groupBox_6)
         self.combo_box_midi_cc_release.setObjectName(u"combo_box_midi_cc_release")
-        sizePolicy4.setHeightForWidth(self.combo_box_midi_cc_release.sizePolicy().hasHeightForWidth())
-        self.combo_box_midi_cc_release.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_midi_cc_release.sizePolicy().hasHeightForWidth())
+        self.combo_box_midi_cc_release.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_12.addWidget(self.combo_box_midi_cc_release)
 
@@ -427,15 +421,15 @@ class Ui_main_window_sound_pad(object):
 
         self.label_23 = QLabel(self.groupBox_6)
         self.label_23.setObjectName(u"label_23")
-        sizePolicy2.setHeightForWidth(self.label_23.sizePolicy().hasHeightForWidth())
-        self.label_23.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_23.sizePolicy().hasHeightForWidth())
+        self.label_23.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_12.addWidget(self.label_23)
 
         self.combo_box_value_release = QComboBox(self.groupBox_6)
         self.combo_box_value_release.setObjectName(u"combo_box_value_release")
-        sizePolicy4.setHeightForWidth(self.combo_box_value_release.sizePolicy().hasHeightForWidth())
-        self.combo_box_value_release.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_value_release.sizePolicy().hasHeightForWidth())
+        self.combo_box_value_release.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_12.addWidget(self.combo_box_value_release)
 
@@ -445,15 +439,15 @@ class Ui_main_window_sound_pad(object):
 
         self.label_21 = QLabel(self.groupBox_6)
         self.label_21.setObjectName(u"label_21")
-        sizePolicy2.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
-        self.label_21.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
+        self.label_21.setSizePolicy(sizePolicy1)
 
         self.horizontalLayout_12.addWidget(self.label_21)
 
         self.combo_box_chn_release = QComboBox(self.groupBox_6)
         self.combo_box_chn_release.setObjectName(u"combo_box_chn_release")
-        sizePolicy4.setHeightForWidth(self.combo_box_chn_release.sizePolicy().hasHeightForWidth())
-        self.combo_box_chn_release.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_chn_release.sizePolicy().hasHeightForWidth())
+        self.combo_box_chn_release.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_12.addWidget(self.combo_box_chn_release)
 
@@ -462,26 +456,26 @@ class Ui_main_window_sound_pad(object):
 
         self.groupBox_5 = QGroupBox(self.centralwidget)
         self.groupBox_5.setObjectName(u"groupBox_5")
-        sizePolicy2.setHeightForWidth(self.groupBox_5.sizePolicy().hasHeightForWidth())
-        self.groupBox_5.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.groupBox_5.sizePolicy().hasHeightForWidth())
+        self.groupBox_5.setSizePolicy(sizePolicy1)
         self.groupBox_5.setMinimumSize(QSize(350, 0))
         self.groupBox_5.setMaximumSize(QSize(350, 16777215))
         self.horizontalLayout_16 = QHBoxLayout(self.groupBox_5)
         self.horizontalLayout_16.setObjectName(u"horizontalLayout_16")
         self.label_17 = QLabel(self.groupBox_5)
         self.label_17.setObjectName(u"label_17")
-        sizePolicy3.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
-        self.label_17.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.label_17.sizePolicy().hasHeightForWidth())
+        self.label_17.setSizePolicy(sizePolicy2)
 
         self.horizontalLayout_16.addWidget(self.label_17)
 
         self.combo_box_midi_port = QComboBox(self.groupBox_5)
         self.combo_box_midi_port.setObjectName(u"combo_box_midi_port")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.combo_box_midi_port.sizePolicy().hasHeightForWidth())
-        self.combo_box_midi_port.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.combo_box_midi_port.sizePolicy().hasHeightForWidth())
+        self.combo_box_midi_port.setSizePolicy(sizePolicy4)
 
         self.horizontalLayout_16.addWidget(self.combo_box_midi_port)
 
@@ -491,8 +485,8 @@ class Ui_main_window_sound_pad(object):
 
         self.push_button_refresh_midi_port = QPushButton(self.groupBox_5)
         self.push_button_refresh_midi_port.setObjectName(u"push_button_refresh_midi_port")
-        sizePolicy2.setHeightForWidth(self.push_button_refresh_midi_port.sizePolicy().hasHeightForWidth())
-        self.push_button_refresh_midi_port.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.push_button_refresh_midi_port.sizePolicy().hasHeightForWidth())
+        self.push_button_refresh_midi_port.setSizePolicy(sizePolicy1)
         self.push_button_refresh_midi_port.setMinimumSize(QSize(0, 0))
         self.push_button_refresh_midi_port.setMaximumSize(QSize(16777215, 16777215))
 
@@ -505,10 +499,10 @@ class Ui_main_window_sound_pad(object):
         self.verticalLayout_7.addLayout(self.horizontalLayout_14)
 
 
-        self.horizontalLayout.addLayout(self.verticalLayout_7)
+        self.verticalLayout_6.addLayout(self.verticalLayout_7)
 
 
-        self.verticalLayout.addLayout(self.horizontalLayout)
+        self.verticalLayout.addLayout(self.verticalLayout_6)
 
         main_window_sound_pad.setCentralWidget(self.centralwidget)
         self.statusBar = QStatusBar(main_window_sound_pad)
