@@ -51,7 +51,6 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         # pos check
         self.pos_cache: tuple[int, int] = (0, 0)
         self.last_pos_cache: tuple[int, int] | None = None
-        self.tablet_mode: bool = False          # tablet or mouse mode
         self.pos_update_timer = QTimer(self)
         self.pos_update_timer.timeout.connect(self.on_update_pos)
         self.pos_update_timer.start(1000 // MOUSE_CHECK_FPS)
@@ -256,6 +255,7 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.graphics_view.resizeEvent = self.on_panel_resize
         self.graphics_view.mousePressEvent = self.on_panel_mouse_down
         self.graphics_view.mouseReleaseEvent = self.on_panel_mouse_up
+        self.graphics_view.tabletEvent = self.on_panel_tablet_event
 
     def on_panel_resize(self, event):
         self.graphics_scene.setSceneRect(0, 0, self.graphics_view.width(), self.graphics_view.height())
@@ -263,21 +263,20 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
     def on_panel_mouse_down(self, event: QMouseEvent):
         self.clear_graphics()
         self.is_mouse_down = True
-        self.tablet_mode = False
         self.midi_conn.send_midi_msg(
             self.combo_box_midi_cc_press.currentData(),
             self.combo_box_chn_press.currentData(),
             self.combo_box_value_press.currentData())
 
     def on_panel_mouse_up(self, event: QMouseEvent):
-        if self.tablet_mode:
-            return
-
         self.is_mouse_down = False
         self.midi_conn.send_midi_msg(
             self.combo_box_midi_cc_release.currentData(),
             self.combo_box_chn_release.currentData(),
             self.combo_box_value_release.currentData())
+
+    def on_panel_tablet_event(self, event):
+        self.pressure = event.pressure()
 
     def draw_line(self, x1: float, y1: float, x2: float, y2: float):
         self.graphics_scene.addLine(x1, y1, x2, y2, self.pen)
@@ -286,13 +285,10 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.graphics_scene.clear()
 
     def on_update_pos(self):
-        if self.tablet_mode:
-            pass
-        else:
-            cursor = self.graphics_view.mapFromGlobal(self.cursor().pos())
-            self.pos_cache = (cursor.x(), cursor.y())
-            self.x_axis_ratio = self.pos_cache[0] / self.graphics_view.width()
-            self.y_axis_ratio = self.pos_cache[1] / self.graphics_view.height()
+        cursor = self.graphics_view.mapFromGlobal(self.cursor().pos())
+        self.pos_cache = (cursor.x(), cursor.y())
+        self.x_axis_ratio = self.pos_cache[0] / self.graphics_view.width()
+        self.y_axis_ratio = self.pos_cache[1] / self.graphics_view.height()
 
         # xy position
         x_midi_value = self.x_axis_midi_value
@@ -313,29 +309,34 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.move_speed_last_y = self.y_axis_ratio
         self.update_status_bar_speed(move_speed_midi_value)
 
-        if self.tablet_mode:
-            pass
+        # pressure
+        pressure_midi_value = self.pressure_midi_value
+        self.update_status_bar_pressure(pressure_midi_value)
+
+        if self.is_mouse_down:
+            if self.last_pos_cache is not None:
+                self.draw_line(
+                    self.last_pos_cache[0], self.last_pos_cache[1],
+                    self.pos_cache[0], self.pos_cache[1])
+            self.last_pos_cache = self.pos_cache
+            self.midi_conn.send_midi_msg(
+                self.combo_box_midi_cc_x_axis.currentData(),
+                self.combo_box_chn_x_axis.currentData(),
+                x_midi_value)
+            self.midi_conn.send_midi_msg(
+                self.combo_box_midi_cc_y_axis.currentData(),
+                self.combo_box_chn_y_axis.currentData(),
+                y_midi_value)
+            self.midi_conn.send_midi_msg(
+                self.combo_box_midi_cc_speed.currentData(),
+                self.combo_box_chn_speed.currentData(),
+                move_speed_midi_value)
+            self.midi_conn.send_midi_msg(
+                self.combo_box_midi_cc_pressure.currentData(),
+                self.combo_box_chn_pressure.currentData(),
+                pressure_midi_value)
         else:
-            if self.is_mouse_down:
-                if self.last_pos_cache is not None:
-                    self.draw_line(
-                        self.last_pos_cache[0], self.last_pos_cache[1],
-                        self.pos_cache[0], self.pos_cache[1])
-                self.last_pos_cache = self.pos_cache
-                self.midi_conn.send_midi_msg(
-                    self.combo_box_midi_cc_x_axis.currentData(),
-                    self.combo_box_chn_x_axis.currentData(),
-                    x_midi_value)
-                self.midi_conn.send_midi_msg(
-                    self.combo_box_midi_cc_y_axis.currentData(),
-                    self.combo_box_chn_y_axis.currentData(),
-                    y_midi_value)
-                self.midi_conn.send_midi_msg(
-                    self.combo_box_midi_cc_speed.currentData(),
-                    self.combo_box_chn_speed.currentData(),
-                    move_speed_midi_value)
-            else:
-                self.last_pos_cache = None
+            self.last_pos_cache = None
 
     # endregion
 
