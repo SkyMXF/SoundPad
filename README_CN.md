@@ -1,6 +1,8 @@
 # SoundPad
 
 ### Demo Video
+[Bilibili](https://www.bilibili.com/video/BV1KD421M76i/?share_source=copy_web&vd_source=5c7681b720da88e0cbbd8ec41a82594d)
+
 https://github.com/SkyMXF/SoundPad/assets/30136123/ae0cf3b1-cb3f-4909-a9da-61e4fc5d606f
 
 ### 使用前
