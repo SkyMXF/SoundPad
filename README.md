@@ -1,5 +1,7 @@
 # SoundPad
 
+[中文版说明](https://github.com/SkyMXF/SoundPad/blob/main/README_CN.md)
+
 ### Requirements
 If you dont have any available midi port on your PC, you need to create a virtual midi port.
 
