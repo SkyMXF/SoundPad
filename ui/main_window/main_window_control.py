@@ -71,6 +71,9 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
             "release_midi_cc": self.combo_box_midi_cc_release,
             "release_midi_chn": self.combo_box_chn_release,
             "release_midi_value": self.combo_box_value_release,
+            "midi_send_midi_cc": self.combo_box_midi_cc_midi_send,
+            "midi_send_midi_chn": self.combo_box_chn_midi_send,
+            "midi_send_midi_value": self.combo_box_value_midi_send,
             "midi_port": self.combo_box_midi_port,
         }
         self.midi_slider_cfg_binds = {
@@ -135,7 +138,8 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         for combo_box in [
             self.combo_box_midi_cc_x_axis, self.combo_box_midi_cc_y_axis,
             self.combo_box_midi_cc_speed, self.combo_box_midi_cc_pressure,
-            self.combo_box_midi_cc_press, self.combo_box_midi_cc_release
+            self.combo_box_midi_cc_press, self.combo_box_midi_cc_release,
+            self.combo_box_midi_cc_midi_send
         ]:
             for cc, desc in CC_DEF:
                 combo_box.addItem("%d: %s" % (cc, desc), cc)
@@ -144,14 +148,15 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         for combo_box in [
             self.combo_box_chn_x_axis, self.combo_box_chn_y_axis,
             self.combo_box_chn_speed, self.combo_box_chn_pressure,
-            self.combo_box_chn_press, self.combo_box_chn_release
+            self.combo_box_chn_press, self.combo_box_chn_release,
+            self.combo_box_chn_midi_send
         ]:
             for i in range(MIDI_CHANNELS):
                 combo_box.addItem("%d" % (i + 1), i)
 
         # midi values
         for combo_box in [
-            self.combo_box_value_press, self.combo_box_value_release
+            self.combo_box_value_press, self.combo_box_value_release, self.combo_box_value_midi_send
         ]:
             for i in range(MIDI_VALUES):
                 combo_box.addItem("%d" % i, i)
@@ -174,6 +179,12 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         for key, slider in self.midi_slider_cfg_binds.items():
             value = cfg.get_config(key, default_value=slider.value())
             slider.setValue(max(min(value, slider.maximum()), slider.minimum()))
+
+    def on_click_midi_send(self):
+        self.midi_conn.send_midi_msg(
+            self.combo_box_midi_cc_midi_send.currentData(),
+            self.combo_box_chn_midi_send.currentData(),
+            self.combo_box_value_midi_send.currentData())
 
     # endregion
 
@@ -347,6 +358,7 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.push_button_refresh_midi_port.clicked.connect(self.on_refresh_midi_ports)
         self.on_select_midi_port()
         self.combo_box_midi_port.currentIndexChanged.connect(self.on_select_midi_port)
+        self.push_button_send_midi.clicked.connect(self.on_click_midi_send)
 
     def on_refresh_midi_ports(self):
         self.combo_box_midi_port.clear()

@@ -335,6 +335,10 @@ class Ui_main_window_sound_pad(object):
 
         self.horizontalLayout_11.addWidget(self.groupBox_4)
 
+        self.horizontalLayout_11.setStretch(0, 1)
+        self.horizontalLayout_11.setStretch(1, 1)
+        self.horizontalLayout_11.setStretch(2, 1)
+        self.horizontalLayout_11.setStretch(3, 1)
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_11)
 
@@ -342,64 +346,73 @@ class Ui_main_window_sound_pad(object):
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
         self.groupBox_7 = QGroupBox(self.centralwidget)
         self.groupBox_7.setObjectName(u"groupBox_7")
-        self.horizontalLayout_15 = QHBoxLayout(self.groupBox_7)
-        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
+        self.verticalLayout_8 = QVBoxLayout(self.groupBox_7)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.horizontalLayout_10 = QHBoxLayout()
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
         self.label_18 = QLabel(self.groupBox_7)
         self.label_18.setObjectName(u"label_18")
         sizePolicy1.setHeightForWidth(self.label_18.sizePolicy().hasHeightForWidth())
         self.label_18.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_15.addWidget(self.label_18)
+        self.horizontalLayout_10.addWidget(self.label_18)
 
         self.combo_box_midi_cc_press = QComboBox(self.groupBox_7)
         self.combo_box_midi_cc_press.setObjectName(u"combo_box_midi_cc_press")
         sizePolicy3.setHeightForWidth(self.combo_box_midi_cc_press.sizePolicy().hasHeightForWidth())
         self.combo_box_midi_cc_press.setSizePolicy(sizePolicy3)
 
-        self.horizontalLayout_15.addWidget(self.combo_box_midi_cc_press)
+        self.horizontalLayout_10.addWidget(self.combo_box_midi_cc_press)
 
-        self.horizontalSpacer_8 = QSpacerItem(10, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
-        self.horizontalLayout_15.addItem(self.horizontalSpacer_8)
+        self.verticalLayout_8.addLayout(self.horizontalLayout_10)
 
+        self.horizontalLayout_13 = QHBoxLayout()
+        self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
         self.label_22 = QLabel(self.groupBox_7)
         self.label_22.setObjectName(u"label_22")
         sizePolicy1.setHeightForWidth(self.label_22.sizePolicy().hasHeightForWidth())
         self.label_22.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_15.addWidget(self.label_22)
+        self.horizontalLayout_13.addWidget(self.label_22)
 
         self.combo_box_value_press = QComboBox(self.groupBox_7)
         self.combo_box_value_press.setObjectName(u"combo_box_value_press")
         sizePolicy3.setHeightForWidth(self.combo_box_value_press.sizePolicy().hasHeightForWidth())
         self.combo_box_value_press.setSizePolicy(sizePolicy3)
 
-        self.horizontalLayout_15.addWidget(self.combo_box_value_press)
+        self.horizontalLayout_13.addWidget(self.combo_box_value_press)
 
-        self.horizontalSpacer_6 = QSpacerItem(10, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.horizontalSpacer_8 = QSpacerItem(10, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
-        self.horizontalLayout_15.addItem(self.horizontalSpacer_6)
+        self.horizontalLayout_13.addItem(self.horizontalSpacer_8)
 
         self.label_19 = QLabel(self.groupBox_7)
         self.label_19.setObjectName(u"label_19")
         sizePolicy1.setHeightForWidth(self.label_19.sizePolicy().hasHeightForWidth())
         self.label_19.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_15.addWidget(self.label_19)
+        self.horizontalLayout_13.addWidget(self.label_19)
 
         self.combo_box_chn_press = QComboBox(self.groupBox_7)
         self.combo_box_chn_press.setObjectName(u"combo_box_chn_press")
         sizePolicy3.setHeightForWidth(self.combo_box_chn_press.sizePolicy().hasHeightForWidth())
         self.combo_box_chn_press.setSizePolicy(sizePolicy3)
 
-        self.horizontalLayout_15.addWidget(self.combo_box_chn_press)
+        self.horizontalLayout_13.addWidget(self.combo_box_chn_press)
+
+
+        self.verticalLayout_8.addLayout(self.horizontalLayout_13)
 
 
         self.horizontalLayout_14.addWidget(self.groupBox_7)
 
         self.groupBox_6 = QGroupBox(self.centralwidget)
         self.groupBox_6.setObjectName(u"groupBox_6")
-        self.horizontalLayout_12 = QHBoxLayout(self.groupBox_6)
+        self.groupBox_6.setFlat(False)
+        self.verticalLayout_9 = QVBoxLayout(self.groupBox_6)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.horizontalLayout_12 = QHBoxLayout()
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.label_20 = QLabel(self.groupBox_6)
         self.label_20.setObjectName(u"label_20")
@@ -415,49 +428,129 @@ class Ui_main_window_sound_pad(object):
 
         self.horizontalLayout_12.addWidget(self.combo_box_midi_cc_release)
 
-        self.horizontalSpacer_9 = QSpacerItem(10, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
-        self.horizontalLayout_12.addItem(self.horizontalSpacer_9)
+        self.verticalLayout_9.addLayout(self.horizontalLayout_12)
 
+        self.horizontalLayout_15 = QHBoxLayout()
+        self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
         self.label_23 = QLabel(self.groupBox_6)
         self.label_23.setObjectName(u"label_23")
         sizePolicy1.setHeightForWidth(self.label_23.sizePolicy().hasHeightForWidth())
         self.label_23.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_12.addWidget(self.label_23)
+        self.horizontalLayout_15.addWidget(self.label_23)
 
         self.combo_box_value_release = QComboBox(self.groupBox_6)
         self.combo_box_value_release.setObjectName(u"combo_box_value_release")
         sizePolicy3.setHeightForWidth(self.combo_box_value_release.sizePolicy().hasHeightForWidth())
         self.combo_box_value_release.setSizePolicy(sizePolicy3)
 
-        self.horizontalLayout_12.addWidget(self.combo_box_value_release)
+        self.horizontalLayout_15.addWidget(self.combo_box_value_release)
 
         self.horizontalSpacer_7 = QSpacerItem(10, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
-        self.horizontalLayout_12.addItem(self.horizontalSpacer_7)
+        self.horizontalLayout_15.addItem(self.horizontalSpacer_7)
 
         self.label_21 = QLabel(self.groupBox_6)
         self.label_21.setObjectName(u"label_21")
         sizePolicy1.setHeightForWidth(self.label_21.sizePolicy().hasHeightForWidth())
         self.label_21.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_12.addWidget(self.label_21)
+        self.horizontalLayout_15.addWidget(self.label_21)
 
         self.combo_box_chn_release = QComboBox(self.groupBox_6)
         self.combo_box_chn_release.setObjectName(u"combo_box_chn_release")
         sizePolicy3.setHeightForWidth(self.combo_box_chn_release.sizePolicy().hasHeightForWidth())
         self.combo_box_chn_release.setSizePolicy(sizePolicy3)
 
-        self.horizontalLayout_12.addWidget(self.combo_box_chn_release)
+        self.horizontalLayout_15.addWidget(self.combo_box_chn_release)
+
+
+        self.verticalLayout_9.addLayout(self.horizontalLayout_15)
 
 
         self.horizontalLayout_14.addWidget(self.groupBox_6)
 
+        self.groupBox_8 = QGroupBox(self.centralwidget)
+        self.groupBox_8.setObjectName(u"groupBox_8")
+        self.horizontalLayout = QHBoxLayout(self.groupBox_8)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.verticalLayout_10 = QVBoxLayout()
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.horizontalLayout_17 = QHBoxLayout()
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.label_9 = QLabel(self.groupBox_8)
+        self.label_9.setObjectName(u"label_9")
+        sizePolicy2.setHeightForWidth(self.label_9.sizePolicy().hasHeightForWidth())
+        self.label_9.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_17.addWidget(self.label_9)
+
+        self.combo_box_midi_cc_midi_send = QComboBox(self.groupBox_8)
+        self.combo_box_midi_cc_midi_send.setObjectName(u"combo_box_midi_cc_midi_send")
+
+        self.horizontalLayout_17.addWidget(self.combo_box_midi_cc_midi_send)
+
+
+        self.verticalLayout_10.addLayout(self.horizontalLayout_17)
+
+        self.horizontalLayout_18 = QHBoxLayout()
+        self.horizontalLayout_18.setObjectName(u"horizontalLayout_18")
+        self.label_10 = QLabel(self.groupBox_8)
+        self.label_10.setObjectName(u"label_10")
+        sizePolicy2.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_18.addWidget(self.label_10)
+
+        self.combo_box_value_midi_send = QComboBox(self.groupBox_8)
+        self.combo_box_value_midi_send.setObjectName(u"combo_box_value_midi_send")
+
+        self.horizontalLayout_18.addWidget(self.combo_box_value_midi_send)
+
+        self.horizontalSpacer_6 = QSpacerItem(10, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+
+        self.horizontalLayout_18.addItem(self.horizontalSpacer_6)
+
+        self.label_11 = QLabel(self.groupBox_8)
+        self.label_11.setObjectName(u"label_11")
+        sizePolicy2.setHeightForWidth(self.label_11.sizePolicy().hasHeightForWidth())
+        self.label_11.setSizePolicy(sizePolicy2)
+
+        self.horizontalLayout_18.addWidget(self.label_11)
+
+        self.combo_box_chn_midi_send = QComboBox(self.groupBox_8)
+        self.combo_box_chn_midi_send.setObjectName(u"combo_box_chn_midi_send")
+
+        self.horizontalLayout_18.addWidget(self.combo_box_chn_midi_send)
+
+
+        self.verticalLayout_10.addLayout(self.horizontalLayout_18)
+
+
+        self.horizontalLayout.addLayout(self.verticalLayout_10)
+
+        self.push_button_send_midi = QPushButton(self.groupBox_8)
+        self.push_button_send_midi.setObjectName(u"push_button_send_midi")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.push_button_send_midi.sizePolicy().hasHeightForWidth())
+        self.push_button_send_midi.setSizePolicy(sizePolicy4)
+        self.push_button_send_midi.setMaximumSize(QSize(70, 16777215))
+
+        self.horizontalLayout.addWidget(self.push_button_send_midi)
+
+
+        self.horizontalLayout_14.addWidget(self.groupBox_8)
+
         self.groupBox_5 = QGroupBox(self.centralwidget)
         self.groupBox_5.setObjectName(u"groupBox_5")
-        sizePolicy1.setHeightForWidth(self.groupBox_5.sizePolicy().hasHeightForWidth())
-        self.groupBox_5.setSizePolicy(sizePolicy1)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.groupBox_5.sizePolicy().hasHeightForWidth())
+        self.groupBox_5.setSizePolicy(sizePolicy5)
         self.groupBox_5.setMinimumSize(QSize(350, 0))
         self.groupBox_5.setMaximumSize(QSize(350, 16777215))
         self.horizontalLayout_16 = QHBoxLayout(self.groupBox_5)
@@ -471,11 +564,8 @@ class Ui_main_window_sound_pad(object):
 
         self.combo_box_midi_port = QComboBox(self.groupBox_5)
         self.combo_box_midi_port.setObjectName(u"combo_box_midi_port")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.combo_box_midi_port.sizePolicy().hasHeightForWidth())
-        self.combo_box_midi_port.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.combo_box_midi_port.sizePolicy().hasHeightForWidth())
+        self.combo_box_midi_port.setSizePolicy(sizePolicy3)
 
         self.horizontalLayout_16.addWidget(self.combo_box_midi_port)
 
@@ -495,6 +585,10 @@ class Ui_main_window_sound_pad(object):
 
         self.horizontalLayout_14.addWidget(self.groupBox_5)
 
+        self.horizontalLayout_14.setStretch(0, 1)
+        self.horizontalLayout_14.setStretch(1, 1)
+        self.horizontalLayout_14.setStretch(2, 1)
+        self.horizontalLayout_14.setStretch(3, 1)
 
         self.verticalLayout_7.addLayout(self.horizontalLayout_14)
 
@@ -544,6 +638,11 @@ class Ui_main_window_sound_pad(object):
         self.label_20.setText(QCoreApplication.translate("main_window_sound_pad", u"MIDI CC", None))
         self.label_23.setText(QCoreApplication.translate("main_window_sound_pad", u"Value", None))
         self.label_21.setText(QCoreApplication.translate("main_window_sound_pad", u"Channel", None))
+        self.groupBox_8.setTitle(QCoreApplication.translate("main_window_sound_pad", u"MIDI Send", None))
+        self.label_9.setText(QCoreApplication.translate("main_window_sound_pad", u"MIDI CC", None))
+        self.label_10.setText(QCoreApplication.translate("main_window_sound_pad", u"Value", None))
+        self.label_11.setText(QCoreApplication.translate("main_window_sound_pad", u"Channel", None))
+        self.push_button_send_midi.setText(QCoreApplication.translate("main_window_sound_pad", u"Send", None))
         self.groupBox_5.setTitle(QCoreApplication.translate("main_window_sound_pad", u"Output MIDI Port", None))
         self.label_17.setText(QCoreApplication.translate("main_window_sound_pad", u"Port", None))
         self.push_button_refresh_midi_port.setText(QCoreApplication.translate("main_window_sound_pad", u"Refresh", None))
