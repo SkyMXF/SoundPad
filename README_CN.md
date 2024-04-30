@@ -23,7 +23,6 @@ SoundPad能够将六种手势输入形式转换为MIDI信号：
 - 速度：当鼠标左键按下时，鼠标的移动速度也可以连接到MIDI CC值。
 
 ### 一个Reaper控制的例子
-Here is an example of how to use this tool to control Reaper. In this example, we will use the mouse position to control the pan and pitch of a track and record the audio to another track.
 接下来是一个使用SoundPad控制Reaper的例子。在这个例子中，将使用鼠标位置来控制一条音轨的声相和音调，并将变化后的音频录制到另一条音轨中。
 
 1. 安装 [loopMIDI](https://www.tobias-erichsen.de/software/loopmidi.html) 并创建一个虚拟MIDI端口。
