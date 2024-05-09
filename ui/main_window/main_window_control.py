@@ -7,6 +7,8 @@ from PySide6.QtWidgets import QMainWindow, QWidget, QLabel, QGraphicsScene, QGra
 from PySide6.QtGui import QIcon, QMouseEvent, QCloseEvent, QPen, QColor
 
 from ui.main_window.main_window import Ui_main_window_sound_pad
+from ui.main_window.control_widgets.realtime_control_widget_control import RealtimeControlWidgetControl, SensitivityType
+from ui.main_window.control_widgets.one_shot_control_widget_control import OneShotControlWidgetControl
 from utils.log import Logger
 from utils.midi import CC_DEF, MIDI_CHANNELS, MIDI_VALUES, MIDIConn
 from utils.config import UserConfig
@@ -30,12 +32,8 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         # control panel variables
         self.is_mouse_down = False
         self.x_axis_ratio: float = 0.0
-        self.x_axis_midi_value_min: int = 0
-        self.x_axis_midi_value_max: int = 128
         self.x_axis_sensitive_range: tuple[float, float] = (0.5, 2.0)
         self.y_axis_ratio: float = 0.0
-        self.y_axis_midi_value_min: int = 0
-        self.y_axis_midi_value_max: int = 128
         self.y_axis_sensitive_range: tuple[float, float] = (0.5, 2.0)
         self.move_speed: float = 0.0
         self.smooth_move_speed: float = 0.0
@@ -55,37 +53,28 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.pos_update_timer.timeout.connect(self.on_update_pos)
         self.pos_update_timer.start(1000 // MOUSE_CHECK_FPS)
 
-        # midi signal uis
-        self.midi_combo_box_cfg_binds = {
-            "x_axis_midi_cc": self.combo_box_midi_cc_x_axis,
-            "x_axis_midi_chn": self.combo_box_chn_x_axis,
-            "y_axis_midi_cc": self.combo_box_midi_cc_y_axis,
-            "y_axis_midi_chn": self.combo_box_chn_y_axis,
-            "speed_midi_cc": self.combo_box_midi_cc_speed,
-            "speed_midi_chn": self.combo_box_chn_speed,
-            "pressure_midi_cc": self.combo_box_midi_cc_pressure,
-            "pressure_midi_chn": self.combo_box_chn_pressure,
-            "press_midi_cc": self.combo_box_midi_cc_press,
-            "press_midi_chn": self.combo_box_chn_press,
-            "press_midi_value": self.combo_box_value_press,
-            "release_midi_cc": self.combo_box_midi_cc_release,
-            "release_midi_chn": self.combo_box_chn_release,
-            "release_midi_value": self.combo_box_value_release,
-            "midi_send_midi_cc": self.combo_box_midi_cc_midi_send,
-            "midi_send_midi_chn": self.combo_box_chn_midi_send,
-            "midi_send_midi_value": self.combo_box_value_midi_send,
-            "midi_port": self.combo_box_midi_port,
-        }
-        self.midi_slider_cfg_binds = {
-            "x_axis_sens": self.slider_sens_x_axis,
-            "y_axis_sens": self.slider_sens_y_axis,
-            "speed_sens": self.slider_sens_speed,
-            "pressure_sens": self.slider_sens_pressure,
-        }
-        self.init_midi_signal_ui()
+        # midi signal setting widgets
+        self.x_axis_midi_set_widget = RealtimeControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="x_axis",
+            sensitive_range=(0.5, 2.0), sensitive_type=SensitivityType.RESTRICT)
+        self.y_axis_midi_set_widget = RealtimeControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="y_axis",
+            sensitive_range=(0.5, 2.0), sensitive_type=SensitivityType.RESTRICT)
+        self.speed_midi_set_widget = RealtimeControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="speed",
+            sensitive_range=(0.125, 8.0), sensitive_type=SensitivityType.FACTOR)
+        self.pressure_midi_set_widget = RealtimeControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="pressure",
+            sensitive_range=(0.125, 8.0), sensitive_type=SensitivityType.FACTOR)
+        self.press_midi_set_widget = OneShotControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="press")
+        self.release_midi_set_widget = OneShotControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="release")
+        self.midi_send_midi_set_widget = OneShotControlWidgetControl(
+            parent=self, preset_cfg=UserConfig(), preset_cfg_prefix="midi_send")
 
-        # midi signal controls
-        self.init_midi_signal_controls()
+        # midi signal uis
+        self.init_midi_signal_ui()
 
         # status bar
         self.status_label_x_axis: Optional[QLabel] = None
@@ -134,128 +123,33 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
 
     def init_midi_signal_ui(self):
 
-        # midi cc definition combo boxes
-        for combo_box in [
-            self.combo_box_midi_cc_x_axis, self.combo_box_midi_cc_y_axis,
-            self.combo_box_midi_cc_speed, self.combo_box_midi_cc_pressure,
-            self.combo_box_midi_cc_press, self.combo_box_midi_cc_release,
-            self.combo_box_midi_cc_midi_send
-        ]:
-            for cc, desc in CC_DEF:
-                combo_box.addItem("%d: %s" % (cc, desc), cc)
-
-        # midi channel combo boxes
-        for combo_box in [
-            self.combo_box_chn_x_axis, self.combo_box_chn_y_axis,
-            self.combo_box_chn_speed, self.combo_box_chn_pressure,
-            self.combo_box_chn_press, self.combo_box_chn_release,
-            self.combo_box_chn_midi_send
-        ]:
-            for i in range(MIDI_CHANNELS):
-                combo_box.addItem("%d" % (i + 1), i)
-
-        # midi values
-        for combo_box in [
-            self.combo_box_value_press, self.combo_box_value_release, self.combo_box_value_midi_send
-        ]:
-            for i in range(MIDI_VALUES):
-                combo_box.addItem("%d" % i, i)
+        self.vertical_layout_x_axis_group.addWidget(self.x_axis_midi_set_widget)
+        self.vertical_layout_y_axis_group.addWidget(self.y_axis_midi_set_widget)
+        self.vertical_layout_speed_group.addWidget(self.speed_midi_set_widget)
+        self.vertical_layout_pressure_group.addWidget(self.pressure_midi_set_widget)
+        self.vertical_layout_press_event_group.addWidget(self.press_midi_set_widget)
+        self.vertical_layout_release_event_group.addWidget(self.release_midi_set_widget)
+        self.horizontal_layout_midi_send_group.insertWidget(0, self.midi_send_midi_set_widget)
 
     def save_midi_signal_config(self):
         cfg = UserConfig()
-        for key, combo_box in self.midi_combo_box_cfg_binds.items():
-            cfg.set_config(key, combo_box.currentIndex())
-
-        for key, slider in self.midi_slider_cfg_binds.items():
-            cfg.set_config(key, slider.value())
+        cfg.set_config("midi_port", self.combo_box_midi_port.currentIndex())
+        self.x_axis_midi_set_widget.save_cfg()
+        self.y_axis_midi_set_widget.save_cfg()
+        self.speed_midi_set_widget.save_cfg()
+        self.pressure_midi_set_widget.save_cfg()
+        self.press_midi_set_widget.save_cfg()
+        self.release_midi_set_widget.save_cfg()
+        self.midi_send_midi_set_widget.save_cfg()
 
     def load_midi_signal_config(self):
         cfg = UserConfig()
-        for key, combo_box in self.midi_combo_box_cfg_binds.items():
-            idx = cfg.get_config(key, default_value=combo_box.currentIndex())
-            if idx < combo_box.count():
-                combo_box.setCurrentIndex(idx)
-
-        for key, slider in self.midi_slider_cfg_binds.items():
-            value = cfg.get_config(key, default_value=slider.value())
-            slider.setValue(max(min(value, slider.maximum()), slider.minimum()))
+        self.combo_box_midi_port.setCurrentIndex(cfg.get_config("midi_port", 0))
 
     def on_click_midi_send(self):
         self.midi_conn.send_midi_msg(
-            self.combo_box_midi_cc_midi_send.currentData(),
-            self.combo_box_chn_midi_send.currentData(),
-            self.combo_box_value_midi_send.currentData())
-
-    # endregion
-
-    # region midi signals send
-
-    def init_midi_signal_controls(self):
-        self.slider_sens_x_axis.valueChanged.connect(self.on_x_axis_sens_slider_change)
-        self.slider_sens_y_axis.valueChanged.connect(self.on_y_axis_sens_slider_change)
-        self.slider_sens_speed.valueChanged.connect(self.on_speed_sens_slider_change)
-        self.slider_sens_pressure.valueChanged.connect(self.on_pressure_sens_slider_change)
-
-        self.slider_sens_x_axis.setValue(
-            int(((1.0 - self.x_axis_sensitive_range[0]) / (self.x_axis_sensitive_range[1] - self.x_axis_sensitive_range[0])) * 10000) + 0.5)
-        self.slider_sens_y_axis.setValue(
-            int(((1.0 - self.y_axis_sensitive_range[0]) / (self.y_axis_sensitive_range[1] - self.y_axis_sensitive_range[0])) * 10000) + 0.5)
-        self.slider_sens_speed.setValue(
-            int((self.move_speed_sensitive - self.move_speed_sensitive_range[0]) / (self.move_speed_sensitive_range[1] - self.move_speed_sensitive_range[0]) * 10000) + 0.5)
-        self.slider_sens_pressure.setValue(
-            int((self.pressure_sensitive - self.pressure_sensitive_range[0]) / (self.pressure_sensitive_range[1] - self.pressure_sensitive_range[0]) * 10000) + 0.5)
-
-    def on_x_axis_sens_slider_change(self, value: int):
-        sensitive = value / 10000.0 * (
-            self.x_axis_sensitive_range[1] - self.x_axis_sensitive_range[0]) + self.x_axis_sensitive_range[0]
-        self.label_x_axis_sens.setText("%.3f" % sensitive)
-        self.x_axis_midi_value_min = int(64 - 64 * sensitive)
-        self.x_axis_midi_value_max = int(64 + 64 * sensitive)
-
-    def on_y_axis_sens_slider_change(self, value: int):
-        sensitive = value / 10000.0 * (
-            self.y_axis_sensitive_range[1] - self.y_axis_sensitive_range[0]) + self.y_axis_sensitive_range[0]
-        self.label_y_axis_sens.setText("%.3f" % sensitive)
-        self.y_axis_midi_value_min = int(64 - 64 * sensitive)
-        self.y_axis_midi_value_max = int(64 + 64 * sensitive)
-
-    def on_speed_sens_slider_change(self, value: int):
-        self.move_speed_sensitive = value / 10000.0 * (
-            self.move_speed_sensitive_range[1] - self.move_speed_sensitive_range[0]) + self.move_speed_sensitive_range[0]
-        self.label_speed_sens.setText("%.3f" % self.move_speed_sensitive)
-
-    def on_pressure_sens_slider_change(self, value: int):
-        self.pressure_sensitive = value / 10000.0 * (
-            self.pressure_sensitive_range[1] - self.pressure_sensitive_range[0]) + self.pressure_sensitive_range[0]
-        self.label_pressure_sens.setText("%.3f" % self.pressure_sensitive)
-
-    @property
-    def x_axis_midi_value(self) -> int:
-        return min(
-            max(
-                int(
-                    self.x_axis_ratio * (self.x_axis_midi_value_max - self.x_axis_midi_value_min)
-                ) + self.x_axis_midi_value_min,
-                0),
-            127)
-
-    @property
-    def y_axis_midi_value(self) -> int:
-        return min(
-            max(
-                int(
-                    self.y_axis_ratio * (self.y_axis_midi_value_max - self.y_axis_midi_value_min)
-                ) + self.y_axis_midi_value_min,
-                0),
-            127)
-
-    @property
-    def move_speed_midi_value(self) -> int:
-        return max(min(int(self.smooth_move_speed * self.move_speed_sensitive * 128), 127), 0)
-
-    @property
-    def pressure_midi_value(self) -> int:
-        return max(min(int(self.pressure * self.pressure_sensitive * 128), 127), 0)
+            self.midi_send_midi_set_widget.get_midi_msg()
+        )
 
     # endregion
 
@@ -274,17 +168,15 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
     def on_panel_mouse_down(self, event: QMouseEvent):
         self.clear_graphics()
         self.is_mouse_down = True
-        self.midi_conn.send_midi_msg(
-            self.combo_box_midi_cc_press.currentData(),
-            self.combo_box_chn_press.currentData(),
-            self.combo_box_value_press.currentData())
+        midi_msg = self.press_midi_set_widget.get_midi_msg()
+        if midi_msg is not None:
+            self.midi_conn.send_midi_msg(midi_msg)
 
     def on_panel_mouse_up(self, event: QMouseEvent):
         self.is_mouse_down = False
-        self.midi_conn.send_midi_msg(
-            self.combo_box_midi_cc_release.currentData(),
-            self.combo_box_chn_release.currentData(),
-            self.combo_box_value_release.currentData())
+        midi_msg = self.release_midi_set_widget.get_midi_msg()
+        if midi_msg is not None:
+            self.midi_conn.send_midi_msg(midi_msg)
 
     def on_panel_tablet_event(self, event):
         self.pressure = event.pressure()
@@ -300,10 +192,19 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         self.pos_cache = (cursor.x(), cursor.y())
         self.x_axis_ratio = self.pos_cache[0] / self.graphics_view.width()
         self.y_axis_ratio = self.pos_cache[1] / self.graphics_view.height()
+        self.y_axis_ratio = 1.0 - self.y_axis_ratio     # reverse y axis
 
         # xy position
-        x_midi_value = self.x_axis_midi_value
-        y_midi_value = self.y_axis_midi_value
+        x_msg_tuple = self.x_axis_midi_set_widget.get_midi_msg(self.x_axis_ratio)
+        if x_msg_tuple is not None:
+            x_midi_msg, x_midi_value = self.x_axis_midi_set_widget.get_midi_msg(self.x_axis_ratio)
+        else:
+            x_midi_msg, x_midi_value = None, 0
+        y_msg_tuple = self.y_axis_midi_set_widget.get_midi_msg(self.y_axis_ratio)
+        if y_msg_tuple is not None:
+            y_midi_msg, y_midi_value = self.y_axis_midi_set_widget.get_midi_msg(self.y_axis_ratio)
+        else:
+            y_midi_msg, y_midi_value = None, 0
         self.update_status_bar_axis(x_midi_value, y_midi_value)
 
         # mouse move speed
@@ -315,14 +216,14 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
         smooth_time = MOVE_SPEED_ATTACK_TIME if self.move_speed > self.smooth_move_speed else MOVE_SPEED_RELEASE_TIME
         self.smooth_move_speed = (self.smooth_move_speed
                                   + (self.move_speed - self.smooth_move_speed) * time_delta / smooth_time)
-        move_speed_midi_value = self.move_speed_midi_value
+        speed_msg_tuple = self.speed_midi_set_widget.get_midi_msg(self.smooth_move_speed)
         self.move_speed_last_x = self.x_axis_ratio
         self.move_speed_last_y = self.y_axis_ratio
-        self.update_status_bar_speed(move_speed_midi_value)
+        self.update_status_bar_speed(speed_msg_tuple[1] if speed_msg_tuple is not None else 0)
 
         # pressure
-        pressure_midi_value = self.pressure_midi_value
-        self.update_status_bar_pressure(pressure_midi_value)
+        pressure_msg_tuple = self.pressure_midi_set_widget.get_midi_msg(self.pressure)
+        self.update_status_bar_pressure(pressure_msg_tuple[1] if pressure_msg_tuple is not None else 0)
 
         if self.is_mouse_down:
             if self.last_pos_cache is not None:
@@ -330,22 +231,14 @@ class MainWindowGUI(QMainWindow, Ui_main_window_sound_pad):
                     self.last_pos_cache[0], self.last_pos_cache[1],
                     self.pos_cache[0], self.pos_cache[1])
             self.last_pos_cache = self.pos_cache
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_x_axis.currentData(),
-                self.combo_box_chn_x_axis.currentData(),
-                x_midi_value)
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_y_axis.currentData(),
-                self.combo_box_chn_y_axis.currentData(),
-                y_midi_value)
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_speed.currentData(),
-                self.combo_box_chn_speed.currentData(),
-                move_speed_midi_value)
-            self.midi_conn.send_midi_msg(
-                self.combo_box_midi_cc_pressure.currentData(),
-                self.combo_box_chn_pressure.currentData(),
-                pressure_midi_value)
+            if x_midi_msg is not None:
+                self.midi_conn.send_midi_msg(x_midi_msg)
+            if y_midi_msg is not None:
+                self.midi_conn.send_midi_msg(y_midi_msg)
+            if speed_msg_tuple is not None:
+                self.midi_conn.send_midi_msg(speed_msg_tuple[0])
+            if pressure_msg_tuple is not None:
+                self.midi_conn.send_midi_msg(pressure_msg_tuple[0])
         else:
             self.last_pos_cache = None
 

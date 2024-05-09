@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     aim_dir = "release"
     res_files = [
-        "cc_def.csv", "material.css"
+        "defs", "material.css"
     ]
 
     output_dir = os.path.join(".", "packaged")
@@ -38,4 +38,7 @@ if __name__ == '__main__':
         os.remove(exe_aim_path)
     shutil.copy(exe_src_path, exe_aim_path)
     for res_file in res_files:
-        shutil.copy(res_file, os.path.join(aim_dir, res_file))
+        if os.path.isdir(res_file):
+            shutil.copytree(res_file, os.path.join(aim_dir, res_file))
+        else:
+            shutil.copy(res_file, os.path.join(aim_dir, res_file))

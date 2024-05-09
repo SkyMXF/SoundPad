@@ -7,7 +7,7 @@ from utils.log import Logger
 
 
 # load cc definition from csv file
-CC_DEFINITION_PATH = "cc_def.csv"
+CC_DEFINITION_PATH = os.path.join("defs", "cc_def.csv")
 CC_DEF: list[tuple[int, str]] = []
 if os.path.exists(CC_DEFINITION_PATH):
     with open(CC_DEFINITION_PATH, "r", encoding="utf-8") as f:
@@ -20,6 +20,21 @@ if os.path.exists(CC_DEFINITION_PATH):
             cc = int(row[0])
             desc = row[1]
             CC_DEF.append((cc, desc))
+
+# load note definition from csv file
+NOTE_DEFINITION_PATH = os.path.join("defs", "note_def.csv")
+NOTE_DEF: list[tuple[int, str]] = []
+if os.path.exists(NOTE_DEFINITION_PATH):
+    with open(NOTE_DEFINITION_PATH, "r", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        for idx, row in enumerate(reader):
+            if idx == 0:
+                continue
+            if len(row) < 2:
+                continue
+            midi_value = int(row[0])
+            note = row[1]
+            NOTE_DEF.append((midi_value, note))
 
 MIDI_CHANNELS = 16
 MIDI_VALUES = 128
@@ -49,8 +64,8 @@ class MIDIConn(object):
     def is_available(self) -> bool:
         return self.out_stream is not None
 
-    def send_midi_msg(self, cc: int, channel: int, value: int):
-        self.out_stream.send_message([0xB0 + channel, cc, value])
+    def send_midi_msg(self, value_list: list[int]):
+        self.out_stream.send_message(value_list)
 
     def close(self):
         self.out_stream.delete()
